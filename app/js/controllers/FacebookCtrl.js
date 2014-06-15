@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.controller('HomeController', ['$scope', 'FacebookAuthSrv', function($scope, FacebookAuthSrv) {
+myApp.controller('FacebookCtrl', ['$scope', 'FacebookAuthSrv', function($scope, FacebookAuthSrv) {
 
   $scope.login = function () {
     FacebookAuthSrv.login();

@@ -2,8 +2,6 @@
 
 myApp.factory('FacebookAuthSrv', ['$rootScope', 'ezfb', function($rootScope, ezfb) {
 
-  var user;
-
   var checkLoginState = function () {
     var _this = this;
     ezfb.getLoginStatus().then(function(response) {
@@ -51,8 +49,7 @@ myApp.factory('FacebookAuthSrv', ['$rootScope', 'ezfb', function($rootScope, ezf
     appLogin: appLogin,
     login:login,
     logout: logout,
-    checkLoginState: checkLoginState,
-    user: user
+    checkLoginState: checkLoginState
   }
 
 }]);

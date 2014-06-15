@@ -12,10 +12,7 @@ config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'ezfbProvid
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'partials/home.html',
-        controller: 'HomeController',
-        controllerUrl: 'js/controllers/HomeController.js'
-
+        templateUrl: 'partials/home.html'
       });
 
     $urlRouterProvider.otherwise('/#');
