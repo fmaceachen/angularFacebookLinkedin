@@ -22,7 +22,7 @@ config(['$stateProvider', '$urlRouterProvider', '$locationProvider', 'ezfbProvid
 
     ezfbProvider.setInitParams({
       appId: '293369750840632',
-      cookie     : true,
-      xfbml      : false
+      cookie: true,
+      xfbml: false
     });
 }]);

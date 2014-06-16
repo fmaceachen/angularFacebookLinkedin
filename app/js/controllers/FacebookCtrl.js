@@ -14,4 +14,8 @@ myApp.controller('FacebookCtrl', ['$scope', 'FacebookAuthSrv', function($scope, 
     return FacebookAuthSrv.user;
   };
 
+  $scope.checkLoginState = function () {
+    FacebookAuthSrv.checkLoginState();
+  }
+
 }]);

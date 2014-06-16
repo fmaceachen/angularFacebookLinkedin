@@ -1,55 +1,62 @@
 'use strict';
 
-myApp.factory('FacebookAuthSrv', ['$rootScope', 'ezfb', function($rootScope, ezfb) {
+myApp.factory('FacebookAuthSrv', ['$rootScope', '$q', 'ezfb', function($rootScope, $q, ezfb) {
 
-  var checkLoginState = function () {
+  var FacebookAuthSrv = Object.create(BaseAuthSrv);
+
+  FacebookAuthSrv.checkLoginState = function () {
     var _this = this;
     ezfb.getLoginStatus().then(function(response) {
-      _this.appLogin(response);
+      if (response.status === 'connected') {
+        _this.getUserInfo(response.authResponse);
+      }
     });
   };
 
-  var getUserInfo = function() {
+  FacebookAuthSrv.getUserInfo = function(authResponse) {
     var _this = this;
     ezfb.api('/me').then(function(response) {
-        $rootScope.user = _this.user = response;
+      _this.parseUser(response, authResponse);
     });
   };
 
-  var appLogin = function (response) {
-    if (response.status === 'connected') {
-      console.log('Welcome!  Fetching your information.... ');
-      this.getUserInfo();
-    } else {
-      //user hit cancel button
-      console.log('User cancelled login or did not fully authorize.');
-    }
-  };
-
-  var login  = function (){
+  FacebookAuthSrv.login  = function (){
     var _this = this;
     ezfb.login(null,{
       scope: 'public_profile, email'
     }).then(function(response) {
-      _this.appLogin(response);
+      if (response.status === 'connected') {
+        _this.getUserInfo(response.authResponse);
+      } else {
+        //Cancel was hit
+      }
     });
   };
 
-  var logout = function() {
+  FacebookAuthSrv.logout = function() {
     var _this = this;
-
     ezfb.logout().then(function(response) {
         $rootScope.user = _this.user = null;
     });
-
   };
 
-  return {
-    getUserInfo: getUserInfo,
-    appLogin: appLogin,
-    login:login,
-    logout: logout,
-    checkLoginState: checkLoginState
-  }
+  FacebookAuthSrv.parseUser = function (response, authResponse) {
+    this.user.email = response.email;
+    this.user.firstName = response.first_name;
+    this.user.gender = response.gender;
+    this.user.id = response.id;
+    this.user.lastName = response.last_name;
+    this.user.name = response.name;
+    this.user.accessToken = authResponse.accessToken;
+    this.user.expiresIn = authResponse.expiresIn;
+    this.user.provider = 'Facebook';
+    this.user.isLoggedin = true;
+
+    $rootScope.user = this.user;
+
+    this.saveToken();
+  };
+
+  return FacebookAuthSrv;
 
 }]);
